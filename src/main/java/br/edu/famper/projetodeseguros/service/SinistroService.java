@@ -1,30 +1,24 @@
 package br.edu.famper.projetodeseguros.service;
 
-import br.edu.famper.projetodeseguros.dto.ReclamanteDto;
 import br.edu.famper.projetodeseguros.dto.SinistroDto;
 import br.edu.famper.projetodeseguros.model.Sinistro;
 import br.edu.famper.projetodeseguros.repository.SinistroRepository;
-import br.edu.famper.projetodeseguros.repository.ApoliceRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SinistroService {
-    //https://www.youtube.com/watch?v=Eg-eOQfmrUE
-
+    @Autowired
     private final SinistroRepository sinistroRepository;
-    private final ApoliceRepository apoliceRepository;
 
-
-    public Sinistro salvar(Sinistro sinistro) {
-        return sinistroRepository.save(sinistro);
-    }
-
-
+    // Listar todos os sinistros
     public List<SinistroDto> getAllSinistros() {
         return sinistroRepository
                 .findAll()
@@ -32,39 +26,64 @@ public class SinistroService {
                 .map(sinistro -> SinistroDto
                         .builder()
                         .id(sinistro.getId())
-                        .dataOcorrencia(sinistro.getDataOcorrencia())
                         .descricao(sinistro.getDescricao())
+                        .dataOcorrencia(sinistro.getDataOcorrencia())
                         .valorReclamado(sinistro.getValorReclamado())
-                        .reclamantes(sinistro.getReclamantes()
-                                .stream()
-                                .map(reclamante -> ReclamanteDto
-                                        .builder()
-                                        .id(reclamante.getId())
-                                        .nome(reclamante.getNome())
-                                        .cpfCnpj(reclamante.getCpfCnpj())
-                                        .build())
-                                .toList())
+
                         .build())
                 .toList();
     }
 
+    // Buscar um sinistro
+    public SinistroDto getSinistroById(Long id) {
+        Sinistro sinistro = sinistroRepository.findById(id).orElseThrow();
+        return SinistroDto
+                .builder()
+                .id(sinistro.getId())
+                .descricao(sinistro.getDescricao())
+                .dataOcorrencia(sinistro.getDataOcorrencia())
+                .valorReclamado(sinistro.getValorReclamado())
 
-    public Optional<Sinistro> findById(Long id) {
-        return sinistroRepository.findById(id);
+                .build();
     }
 
+    // Salvar um sinistro
+    public Sinistro saveSinistro(SinistroDto sinistroDto) {
+        Sinistro sinistro = new Sinistro();
+        sinistro.setDescricao(sinistroDto.getDescricao());
+        sinistro.setDataOcorrencia(sinistroDto.getDataOcorrencia());
+        sinistro.setValorReclamado(sinistroDto.getValorReclamado());
 
-    public Sinistro update(Sinistro sinistro) {
-        Sinistro salvo = sinistroRepository.findById(sinistro.getId())
-                .orElseThrow(() -> new RuntimeException("Sinistro não encontrado"));
-        salvo.setDataOcorrencia(sinistro.getDataOcorrencia());
-        salvo.setDescricao(sinistro.getDescricao());
-        salvo.setValorReclamado(sinistro.getValorReclamado());
-        return sinistroRepository.save(salvo);
+        return sinistroRepository.save(sinistro);
     }
 
+    // Editar um sinistro
+    public SinistroDto editSinistro(Long id, SinistroDto sinistroDto) {
+        Sinistro sinistro = sinistroRepository.findById(id).orElseThrow();
+        sinistro.setDescricao(sinistroDto.getDescricao());
+        sinistro.setDataOcorrencia(sinistroDto.getDataOcorrencia());
+        sinistro.setValorReclamado(sinistroDto.getValorReclamado());
 
-    public void deleteById(Long id) {
-        sinistroRepository.deleteById(id);
+        Sinistro sinistroEdited = sinistroRepository.save(sinistro);
+        return SinistroDto
+                .builder()
+                .id(sinistroEdited.getId())
+                .descricao(sinistroEdited.getDescricao())
+                .dataOcorrencia(sinistroEdited.getDataOcorrencia())
+                .valorReclamado(sinistroEdited.getValorReclamado())
+
+                .build();
+    }
+
+    // Deletar um sinistro
+    public boolean deleteSinistro(Long id) {
+        try {
+            Sinistro sinistro = sinistroRepository.findById(id).orElseThrow();
+            sinistroRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
+

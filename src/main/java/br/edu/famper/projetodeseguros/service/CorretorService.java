@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -14,15 +15,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class CorretorService {
-
+    @Autowired
     private final CorretorRepository corretorRepository;
 
-
-    public Corretor salvar(Corretor corretor) {
-        return corretorRepository.save(corretor);
-    }
-
-
+    // Listar todos os corretores
     public List<CorretorDto> getAllCorretores() {
         return corretorRepository
                 .findAll()
@@ -38,24 +34,56 @@ public class CorretorService {
                 .toList();
     }
 
-
-    public Optional<Corretor> findById(Long id) {
-        return corretorRepository.findById(id);
+    // Buscar um corretor
+    public CorretorDto getCorretorById(Long id) {
+        Corretor corretor = corretorRepository.findById(id).orElseThrow();
+        return CorretorDto
+                .builder()
+                .id(corretor.getId())
+                .nome(corretor.getNome())
+                .cnpj(corretor.getCnpj())
+                .email(corretor.getEmail())
+                .telefone(corretor.getTelefone())
+                .build();
     }
 
-
-    public Corretor update(Corretor corretor) {
-        Corretor salvo = corretorRepository.findById(corretor.getId())
-                .orElseThrow(() -> new RuntimeException("Corretor não encontrado"));
-        salvo.setNome(corretor.getNome());
-        salvo.setCnpj(corretor.getCnpj());
-        salvo.setEmail(corretor.getEmail());
-        salvo.setTelefone(corretor.getTelefone());
-        return corretorRepository.save(salvo);
+    // Salvar um corretor
+    public Corretor saveCorretor(CorretorDto corretorDto) {
+        Corretor corretor = new Corretor();
+        corretor.setNome(corretorDto.getNome());
+        corretor.setCnpj(corretorDto.getCnpj());
+        corretor.setEmail(corretorDto.getEmail());
+        corretor.setTelefone(corretorDto.getTelefone());
+        return corretorRepository.save(corretor);
     }
 
+    // Editar um corretor
+    public CorretorDto editCorretor(Long id, CorretorDto corretorDto) {
+        Corretor corretor = corretorRepository.findById(id).orElseThrow();
+        corretor.setNome(corretorDto.getNome());
+        corretor.setCnpj(corretorDto.getCnpj());
+        corretor.setEmail(corretorDto.getEmail());
+        corretor.setTelefone(corretorDto.getTelefone());
+        Corretor corretorEdited = corretorRepository.save(corretor);
+        return CorretorDto
+                .builder()
+                .id(corretorEdited.getId())
+                .nome(corretorEdited.getNome())
+                .cnpj(corretorEdited.getCnpj())
+                .email(corretorEdited.getEmail())
+                .telefone(corretorEdited.getTelefone())
+                .build();
+    }
 
-    public void deleteById(Long id) {
-        corretorRepository.deleteById(id);
+    // Deletar um corretor
+    public boolean deleteCorretor(Long id) {
+        try {
+            Corretor corretor = corretorRepository.findById(id).orElseThrow();
+            corretorRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
+

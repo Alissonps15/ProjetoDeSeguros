@@ -29,4 +29,5 @@ public class Sinistro {
 
     @OneToMany(mappedBy = "sinistro", targetEntity = Reclamante.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Reclamante> reclamantes;
+
 }
