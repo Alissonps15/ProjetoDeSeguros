@@ -118,6 +118,7 @@ A aplicação estará disponível em: `http://localhost:8080.`
   "descricao": "Acidente de carro",
   "valorReclamado": 50000.0,
   "apolice": { "id": 1}
+}
 ```
 
 ### **Reclamante**
