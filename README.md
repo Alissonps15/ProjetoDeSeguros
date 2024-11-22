@@ -1,95 +1,134 @@
-Pré-requisitos
+# Sistema de Seguros
 
-1. Java 17 ou superior
-2. Maven (para gerenciamento de dependências)
-3. PostgreSQL (banco de dados)
 
-Instalação
+## Pré-requisitos
+-Java 17 ou superior                                                                                                                       
+-Maven (para gerenciamento de dependências)                            
+-PostgreSQL (banco de dados)
 
-1. Clonar o repositório: git clone <URL_DO_REPOSITORIO_GIT>
-2. Entrar na pasta do projeto: cd sistema_seguros
-3. Instalar dependências: mvn clean install
 
-Configuração do Banco de Dados
+-**Instalação**
 
-1. Iniciar o PostgreSQL e criar o banco de dados: CREATE DATABASE sistema_seguros;
-2. Criar um usuário específico para o projeto (opcional):
+**Clonando o repositorio e o encontrando**
+```
+git clone <URL_DO_REPOSITORIO_GIT>
+cd sistema_seguros
+```
+**Instalando dependências:**
+```
+mvn clean install
+```
+## Configuração do Banco de Dados
+**Crie o Banco e configure o seu usuario**
+```
+CREATE DATABASE sistema_seguros;
+CREATE USER sistema_seguros_user
+WITH PASSWORD 'sua_senha';
 
-CREATE USER sistema_seguros_user WITH PASSWORD 'sua_senha';
-ALTER DATABASE sistema_seguros OWNER TO sistema_seguros_user;
+ALTER DATABASE sistema_seguros
+OWNER TO sistema_seguros_user;
+```
 
-1. Configurar as credenciais no arquivo src/main/resources/application.properties:
-
-spring.datasource.url=jdbc:postgresql://localhost:5432/sistema_seguros
-spring.datasource.username=sistema_seguros_user
+**Configure as credenciais no arquivo src/main/resources/application.properties:**
+```
+spring.datasource.url=jdbc:postgresql://localhost:5432/ProjetoDeSeguros
+spring.datasource.username=user_seguro
 spring.datasource.password=sua_senha
-
-
+```
 Execução
+```
+mvn spring-boot:run
+```
+A aplicação estará disponível em: `http://localhost:8080.`
 
-1. Rodar o projeto: mvn spring-boot:run
-2. A aplicação estará disponível em: http://localhost:8080.
+## Ordem de Requisições
 
-Ordem de Requisições
+1. Corretor
+2. Segurado
+3. Apólice
+4. Sinistro
+5. Reclamante
 
-Para evitar erros de relacionamento, siga esta ordem para as requisições POST:
+Exemplos de Requisições
 
-1. Corretor: Crie os corretores primeiro.
 
+### **Corretor**
+- *Crie os corretores primeiro, pois eles serão associados às apólices que eles gerenciam*
+- Endpoint:
+    POST `/api/corretor`
+- Corpo da requisição:
+```java
 {
- "nome": "João da Silva",
- "cnpj": "12345678901234",
- "email": "joao.silva@example.com"
+  "nome": "João da Silva",
+  "cnpj": "12345678901234",
+  "email": "joao.silva@example.com",
+  "telefone": "11912345678",
 }
+```
 
-1. Segurado: Crie os segurados após os corretores.
-
+### **Segurado**
+-*Crie os segurados, pois eles serão os proprietários das apólices.*
+- Endpoint:
+    POST `/api/segurado` 
+```java
 {
- "nome": "Carlos Almeida",
- "cpfCnpj": "12345678901",
- "endereco": "Rua Exemplo, 123",
- "telefone": "11912345678",
- "email": "carlos.almeida@example.com"
+  "nome": "Carlos Almeida",
+  "cpfCnpj": "12345678901",
+  "endereco": "Rua Exemplo, 456",
+  "telefone": "11998765432",
+  "email": "carlos.almeida@example.com"
 }
+```
 
-1. Apólice: Crie as apólices e associe os segurados e corretores.
-
+### **Apólice**
+- *Crie as apólices, associando-as a um segurado e a um corretor.*
+- Endpoint:
+    POST `/api/apolice`
+- Corpo da requisição:
+```java
 {
- "numero": "AP12345",
- "dataInicio": "2024-01-01",
- "dataFim": "2024-12-31",
- "valorCobertura": 100000.0,
- "premio": 500.0,
- "segurado": { "id": 1 },
- "corretor": { "id": 1 }
+  "numero": "APO123456",
+  "tipo": "Automóvel",
+  "valor": 50000.00,
+  "dataInicio": "2024-01-01",
+  "dataFim": "2024-12-31",
+  "segurado": { "id": 1 },
+  "corretor": { "id": 1 }
 }
+```
 
-1. Sinistro: Crie os sinistros após as apólices.
-
+### **Sinistro**
+-*Registre os sinistros, associando-os a uma apólice.*
+- Endpoint:
+    POST `/api/sinistro`
+- Corpo da requisição:
+```java
 {
- "dataOcorrencia": "2024-06-15",
- "descricao": "Acidente de carro",
- "valorReclamado": 50000.0,
- "apolice": { "id": 1 }
-}
+  "dataOcorrencia": "2024-06-15",
+  "descricao": "Acidente de carro",
+  "valorReclamado": 50000.0,
+  "apolice": { "id": 1}
+```
 
-1. Reclamante: Crie os reclamantes após os sinistros.
-
+### **Reclamante**
+-*Crie os reclamantes, associando-os aos sinistros nos quais estão envolvidos.*
+- Endpoint:
+    POST `/api/reclamante`
+- Corpo da requisição:
+```java
 {
- "nome": "Maria Silva",
- "cpfCnpj": "12345678902",
- "telefone": "11998765432",
- "email": "maria.silva@example.com",
- "sinistro": { "id": 1 }
+  "nome": "Maria Silva",
+  "cpfCnpj": "12345678902",
+  "telefone": "11911111111",
+  "email": "maria.silva@example.com",
+  "sinistro": {"id": 1 }
 }
+```
+## **Testes no Postman**
 
+1. Importe a documentação da API no Postman usando a URL do OpenAPI (Swagger): `http://localhost:8080/api-docs.json`
+2. Configure a variável {{base_url}} como `http://localhost:8080`.
 
-Testes no Postman
+## **Documentação**
 
-1. Importe a documentação da API no Postman usando a URL do OpenAPI (Swagger): http://localhost:8080/api-docs.json
-2. Configure a variável {{base_url}} como http://localhost:8080 para facilitar o uso dos endpoints.
-3. Execute as requisições seguindo a ordem definida acima para evitar erros de relacionamento.
-
-Documentação
-
-A documentação completa da API é gerada automaticamente pelo Swagger e pode ser acessada em: http://localhost:8080/docs.
+Agora rodando o projeto encontrará a documentação referente ao Swagger em: http://localhost:8080/docs.
