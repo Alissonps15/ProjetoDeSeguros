@@ -1,5 +1,14 @@
 # Sistema de Seguros
+O Sistema de Seguros API é uma API para gerenciar seguros, oferecendo funcionalidades para corretores, segurados, apólices, sinistros e reclamantes
 
+## Sumário
+1. [Pré-requisitos](#pré-requisitos)  
+2. [Instalação](#instalação)  
+3. [Configuração do Banco de Dados](#configuração-do-banco-de-dados)  
+4. [Execução](#execução)
+5. [Ordem de Requisições e Exemplos](#ordem-de-requisições-e-exemplos)  
+6. [Testes no Postman](#testes-no-postman)  
+7. [Documentação](#documentação)
 
 ## Pré-requisitos
 -Java 17 ou superior                                                                                                                       
@@ -7,7 +16,7 @@
 -PostgreSQL (banco de dados)
 
 
--**Instalação**
+## Instalação
 
 **Clonando o repositorio e o encontrando**
 ```
@@ -35,13 +44,13 @@ spring.datasource.url=jdbc:postgresql://localhost:5432/ProjetoDeSeguros
 spring.datasource.username=user_seguro
 spring.datasource.password=sua_senha
 ```
-Execução
+## Execução
 ```
 mvn spring-boot:run
 ```
 A aplicação estará disponível em: `http://localhost:8080.`
 
-## Ordem de Requisições
+## Ordem de Requisições e Exemplos
 
 1. Corretor
 2. Segurado
@@ -49,7 +58,7 @@ A aplicação estará disponível em: `http://localhost:8080.`
 4. Sinistro
 5. Reclamante
 
-Exemplos de Requisições
+**Exemplos de Requisições** 
 
 
 ### **Corretor**
