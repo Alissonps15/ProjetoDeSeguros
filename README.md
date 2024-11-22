@@ -62,7 +62,7 @@ A aplicação estará disponível em: `http://localhost:8080.`
 
 
 ### **Corretor**
-- *Crie os corretores primeiro, pois eles serão associados às apólices que eles gerenciam*
+- *Registre os corretores primeiro, pois eles serão associados às apólices que eles gerenciam*
 - Endpoint:
     POST `/api/corretor`
 - Corpo da requisição:
@@ -76,9 +76,10 @@ A aplicação estará disponível em: `http://localhost:8080.`
 ```
 
 ### **Segurado**
--*Crie os segurados, pois eles serão os proprietários das apólices.*
+- *Registre os segurados, pois eles serão os proprietários das apólices.*
 - Endpoint:
-    POST `/api/segurado` 
+    POST `/api/segurado`
+- Corpo da requisição:
 ```java
 {
   "nome": "Carlos Almeida",
@@ -107,7 +108,7 @@ A aplicação estará disponível em: `http://localhost:8080.`
 ```
 
 ### **Sinistro**
--*Registre os sinistros, associando-os a uma apólice.*
+- *Crie os sinistros, associando-os a uma apólice.*
 - Endpoint:
     POST `/api/sinistro`
 - Corpo da requisição:
@@ -120,7 +121,7 @@ A aplicação estará disponível em: `http://localhost:8080.`
 ```
 
 ### **Reclamante**
--*Crie os reclamantes, associando-os aos sinistros nos quais estão envolvidos.*
+- *Registre os reclamantes, associando-os aos sinistros nos quais estão envolvidos.*
 - Endpoint:
     POST `/api/reclamante`
 - Corpo da requisição:
