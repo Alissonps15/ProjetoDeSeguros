@@ -67,6 +67,7 @@ public class ApoliceService {
         apolice.setDataFim(apoliceDto.getDataFim());
         apolice.setValorCobertura(apoliceDto.getValorCobertura());
         apolice.setPremio(apoliceDto.getPremio());
+        apolice.setTipoSeguro(apoliceDto.getTipoSeguro());
         return apoliceRepository.save(apolice);
     }
 

@@ -32,6 +32,9 @@ public class ApoliceDto {
    @Schema(description = "Valor do Prêmio", example = "500.00", title = "Prêmio")
     private Double premio;
 
+   @Schema(description = "Tipo de Seguro", example = "Seguro de vida", title = "Tipo de Seguro")
+   private String tipoSeguro;
+
     @Schema(description = "Lista de Sinistros", title = "Sinistros")
     private List<SinistroDto> sinistros;
 }
