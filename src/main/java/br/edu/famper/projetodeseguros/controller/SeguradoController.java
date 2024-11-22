@@ -30,7 +30,7 @@ public class SeguradoController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Buscar todos os segurados", description = "Busca todos os segurados no banco de dados e retorna em formato JSON")
+    @Operation(summary = "Buscar todos os segurados", description = "Busca todos os segurado no banco de dados e retorna em formato JSON")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Sucesso"),
             @ApiResponse(responseCode = "404", description = "Não encontrado")
